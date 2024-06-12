@@ -10,7 +10,6 @@ import { loginSuccess } from "@/redux/slices/authSlice";
 import { waitTime } from "@/constants";
 import Title from "antd/es/typography/Title";
 import { customerType } from "@/type/customers";
-import { fetchDataCustomers } from "@/redux/slices/customersSlice";
 import customersService from "@/services/customersService";
 const { useToken } = theme;
 
