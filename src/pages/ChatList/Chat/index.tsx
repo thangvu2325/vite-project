@@ -84,7 +84,7 @@ const ChatPage: FunctionComponent<ChatPageProps> = () => {
     fetchData();
     return () => messageOff("message", handleMessageReceived);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomSelected, params.chatId, handleMessageReceived]);
+  }, []);
   const updateRoom = async (dto: roomType) => {
     try {
       const data = await roomService.updateRoom(axiosClient, room?.id ?? "", {

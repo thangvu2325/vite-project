@@ -27,7 +27,8 @@ const LineChart: FunctionComponent<LineChartProps> = ({ deviceId }) => {
       }
     };
     fetchData();
-  }, [axiosClient, deviceId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deviceId]);
 
   const chartData = data.map((item) => ({
     x: item.createdAt,

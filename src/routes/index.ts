@@ -8,7 +8,7 @@ const RegisterPage = lazy(() => import("@/pages/Register"));
 const LoginPage = lazy(() => import("@/pages/Login"));
 const SettingsPage = lazy(() => import("@/pages/Settings"));
 const ProfilePage = lazy(() => import("@/pages/Profile"));
-const DevicePage = lazy(() => import("@/pages/Device"));
+const DevicePage = lazy(() => import("@/pages/Device/DeviceList/DevicePage"));
 const DeviceListPage = lazy(() => import("@/pages/Device/DeviceList"));
 const CustomerListPage = lazy(() => import("@/pages/Customer/CustomerList"));
 const ReportListPage = lazy(() => import("@/pages/ReportList"));
@@ -27,9 +27,9 @@ export const routes = {
   register: "/register",
   settings: "/settings",
   profile: "/profile",
-  device: "/device",
   deviceList: "/device/device-list",
   deviceListWaiting: "/device/device-list/waiting",
+  device: "/device/device-list/:deviceId",
   customerList: "/customer/customer-list",
   supportCenter: "/support",
   reportList: "/support/report",

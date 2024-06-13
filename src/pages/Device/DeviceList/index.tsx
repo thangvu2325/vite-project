@@ -16,14 +16,20 @@ import { loginSuccess } from "@/redux/slices/authSlice";
 import { Button, Divider, Dropdown, Space, Table, Tag, message } from "antd";
 import Title from "antd/es/typography/Title";
 import { waitTime } from "@/constants";
-import { EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  EllipsisOutlined,
+  PlusOutlined,
+  ArrowRightOutlined,
+} from "@ant-design/icons";
 import devicesService from "@/services/deviceService";
 import { AxiosInstance } from "axios";
 import LineChart from "../components/LineChart";
+import { NavigateFunction, useNavigate } from "react-router";
 interface DeviceListProps {}
 const columns: ({
   showModal,
   axiosClient,
+  navigate,
 }: {
   showModal: (props: {
     secretKey: string;
@@ -31,7 +37,8 @@ const columns: ({
     type: "owner" | "user";
   }) => void;
   axiosClient: AxiosInstance;
-}) => ProColumns<deviceType>[] = ({ showModal }) => {
+  navigate: NavigateFunction;
+}) => ProColumns<deviceType>[] = ({ showModal, navigate }) => {
   return [
     {
       title: "#",
@@ -135,9 +142,17 @@ const columns: ({
               span={1}
               valueType="text"
               ellipsis
-              label="Khói"
+              label="Khói trăắng"
             >
               {record.sensors?.whiteSmokeVal}
+            </ProDescriptions.Item>
+            <ProDescriptions.Item
+              span={1}
+              valueType="text"
+              ellipsis
+              label="Khói Đen"
+            >
+              {record.sensors?.blackSmokeVal}
             </ProDescriptions.Item>
             <ProDescriptions.Item
               label="Dung lượng Pin:"
@@ -271,8 +286,23 @@ const columns: ({
               {dayjs(record.updatedAt).valueOf()}
             </ProDescriptions.Item>
             <ProDescriptions.Item span={2} valueType="text" ellipsis>
-              <Title level={2}>Lịch sử</Title>
+              <div className="flex items-center justify-between">
+                <Title level={2}>Lịch sử</Title>
+                <Button
+                  key="button"
+                  icon={<ArrowRightOutlined />}
+                  onClick={() => {
+                    navigate(`/device/device-list/${record.deviceId}`);
+                  }}
+                  type="primary"
+                  style={{ marginLeft: "auto" }}
+                >
+                  Logger
+                </Button>
+                ,
+              </div>
             </ProDescriptions.Item>
+
             <ProDescriptions.Item span={2} valueType="slider" ellipsis>
               <LineChart deviceId={record.deviceId}></LineChart>
             </ProDescriptions.Item>
@@ -318,6 +348,7 @@ const DeviceList: FunctionComponent<DeviceListProps> = () => {
       type: "owner" | "user";
     }>
   >([]);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const userToken = useAppSelector(userData)?.currentUser as tokenType;
@@ -343,7 +374,7 @@ const DeviceList: FunctionComponent<DeviceListProps> = () => {
       deviceQRCode={deviceQRCode}
     >
       <ProTable<deviceType>
-        columns={(() => columns({ showModal, axiosClient }))()}
+        columns={(() => columns({ showModal, axiosClient, navigate }))()}
         cardBordered
         editable={{
           type: "multiple",

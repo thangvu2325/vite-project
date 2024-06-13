@@ -4,6 +4,7 @@ export type deviceType = {
   deviceId: string;
   fullname: string;
   email: string;
+  roomHistoryLoggerId: string;
   active: boolean;
   phone: string;
   secretKey: string;
@@ -95,4 +96,11 @@ export type historyType = {
     deletedAt: string;
     imsi: string;
   };
+};
+export type historyLoggerType = {
+  historyId: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  logger: string;
 };
