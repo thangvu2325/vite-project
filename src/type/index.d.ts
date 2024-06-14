@@ -25,4 +25,5 @@ export interface ClientToServerEvents {
   join: (roomId: string) => void;
   leave: (roomId: string) => void;
   isTyping: (roomId: string) => void;
+  handleRoom: (roomId: string) => void;
 }

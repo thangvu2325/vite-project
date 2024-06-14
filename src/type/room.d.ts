@@ -9,9 +9,10 @@ export type roomType = {
   title: string;
   description: string;
   type: "message-suporter" | "message-device";
-  owner: string;
+  messages: messageType[];
   submiter: string;
   rate: number;
+  owner: string;
   status: "RESOLVED" | "IN PROGRESS" | "PENDING" | "NEEDS CLARIFICATION";
 };
 export type createRoomtype = {

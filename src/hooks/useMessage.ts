@@ -30,6 +30,9 @@ const messageSent = (data: string) => {
 const messageTyping = (roomId: string) => {
   socketService.typingRoom(roomId);
 };
+const messageChangeRoom = (roomId: string) => {
+  socketService.changeRoom(roomId);
+};
 const messageDisconnect = () => {
   socketService.disconnect();
 };
@@ -46,5 +49,6 @@ const useMessage = () => ({
   messageTyping,
   messageReicevedIsTyping,
   leaveRoom,
+  messageChangeRoom,
 });
 export default useMessage;

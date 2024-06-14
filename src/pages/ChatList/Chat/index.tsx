@@ -33,7 +33,6 @@ const ChatPage: FunctionComponent<ChatPageProps> = () => {
   const [typing, setTyping] = useState<string>("");
   const params = useParams();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [roomSelected, _setRoomSelected] = useState<string>("");
   const [text, setText] = useState<string>("");
   const [messageData, setMessageData] = useState<messageType[]>([]);
   const { message } = App.useApp();
@@ -46,8 +45,8 @@ const ChatPage: FunctionComponent<ChatPageProps> = () => {
     loginSuccess
   );
 
-  const handleMessageReceived = useCallback((message: string) => {
-    const parsedData = JSON.parse(message);
+  const handleMessageReceived = useCallback((messageReceived: string) => {
+    const parsedData = JSON.parse(messageReceived);
     if (parsedData.type === "message") {
       setMessageData((prev) => [...prev, parsedData.message]);
     } else if (parsedData.type === "isTyping") {
@@ -58,12 +57,25 @@ const ChatPage: FunctionComponent<ChatPageProps> = () => {
       timeoutRef.current = setTimeout(() => {
         setTyping("");
       }, 1000);
+    } else if (parsedData.type === "handleRoom") {
+      setRoom(JSON.parse(parsedData.message));
+      // if (room.status === "RESOLVED") {
+      //   message.success("Khách hàng đã đóng trò chuyện");
+      // } else {
+      // }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const { roomList, setRoomList } = useContext(DefaultLayoutContext);
+  const { roomList } = useContext(DefaultLayoutContext);
   const scrollViewRef = useChatScroll(messageData);
-  const { messageReiceved, messageOff, joinRoom, messageSent, messageTyping } =
-    useMessage();
+  const {
+    messageReiceved,
+    messageOff,
+    joinRoom,
+    messageSent,
+    messageTyping,
+    messageChangeRoom,
+  } = useMessage();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -71,28 +83,46 @@ const ChatPage: FunctionComponent<ChatPageProps> = () => {
           axiosClient,
           params.chatId ?? ""
         );
-        joinRoom(data.id);
-        if (data?.messages?.length) {
-          setMessageData(data.messages);
-        }
+
         setRoom(data);
-        messageReiceved(handleMessageReceived);
       } catch (error: any) {
         message.error(error.message || "An error occurred");
       }
     };
     fetchData();
-    return () => messageOff("message", handleMessageReceived);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (room?.id) {
+      console.log(room);
+      if (room.status === "RESOLVED") {
+        message.info("Khách hàng đã đóng phòng!");
+        navigate(routes.chatList);
+        return;
+      }
+      joinRoom(room?.id ?? "");
+      messageReiceved(handleMessageReceived);
+    }
+    if (room?.messages?.length) {
+      setMessageData(room.messages);
+    }
+
+    return () => messageOff("message", handleMessageReceived);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [room]);
   const updateRoom = async (dto: roomType) => {
     try {
-      const data = await roomService.updateRoom(axiosClient, room?.id ?? "", {
-        ...dto,
-        submiter: currentUser?.user.id,
-      } as roomType);
-      setRoomList((prev) => (prev ? [...prev, data] : [data]));
-      setRoom(data);
+      const data: roomType = await roomService.updateRoom(
+        axiosClient,
+        room?.id ?? "",
+        {
+          ...dto,
+          submiter: currentUser?.user.id,
+        } as roomType
+      );
+      messageChangeRoom(data.id),
+        // setRoomList((prev) => (prev ? [...prev, data] : [data]));
+        setRoom(data);
       message.success("Cập nhật thành công");
     } catch (error: any) {
       message.error(error.message);

@@ -48,6 +48,9 @@ class SocketService {
   typingRoom(roomId: string) {
     this.socket.emit("isTyping", roomId);
   }
+  changeRoom(roomId: string) {
+    this.socket.emit("handleRoom", roomId);
+  }
   leaveRoom(roomId: string) {
     this.socket.emit("leave", roomId);
   }
