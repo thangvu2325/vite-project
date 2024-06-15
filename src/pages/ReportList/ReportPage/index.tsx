@@ -235,6 +235,11 @@ const ReportPage: FunctionComponent<ReportPageProps> = () => {
           <div className="px-4 py-2 text-[#898c92]">
             <Textarea
               value={ticket?.message}
+              onChange={(e) => {
+                setTicket(
+                  (prev) => ({ ...prev, message: e.target.value } as ticketType)
+                );
+              }}
               className="h-52"
               label="Message"
             ></Textarea>

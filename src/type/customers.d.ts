@@ -3,20 +3,10 @@ export type customerType = {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
-  username: string;
-  avatar: string;
+  customer_id: string;
+  first_name: string;
+  last_name: string;
+  address: string;
   email: string;
-  isActive: boolean;
-  role: string;
-  customer: {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date;
-    fullName: string;
-    customer_id: string;
-    address: string;
-    email: string;
-    phone: string;
-  };
+  phone: string;
 };

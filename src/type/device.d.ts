@@ -7,6 +7,7 @@ export type deviceType = {
   roomHistoryLoggerId: string;
   active: boolean;
   phone: string;
+  ownerId: string;
   secretKey: string;
   roomId: string;
   battery: {

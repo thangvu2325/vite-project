@@ -63,7 +63,7 @@ const columns: ({
     },
     {
       title: "Mã Khách Hàng",
-      dataIndex: "customer_id",
+      dataIndex: "ownerId",
       copyable: true,
       ellipsis: true,
       tooltip: "Tiêu đề quá dài sẽ tự động co lại",

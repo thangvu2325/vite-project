@@ -25,8 +25,8 @@ const columns: ProColumns<customerType>[] = [
   },
   {
     title: "Tài Khoản",
-    dataIndex: "username",
-    key: "username",
+    dataIndex: "email",
+    key: "taikhoan",
     copyable: true,
     ellipsis: true,
     tooltip: "Tiêu đề quá dài sẽ tự động co lại",
@@ -43,7 +43,7 @@ const columns: ProColumns<customerType>[] = [
     title: "Tên Khách Hàng",
     valueType: "text",
     render: (_text, record) => [
-      <Fragment>{record.customer?.fullName ?? ""}</Fragment>,
+      <Fragment>{record.last_name + " " + record.first_name}</Fragment>,
     ],
     key: "text",
     copyable: true,
@@ -68,9 +68,7 @@ const columns: ProColumns<customerType>[] = [
   },
   {
     title: "Điện Thoại",
-    render: (_text, record) => [
-      <Fragment>{record.customer?.phone ?? ""}</Fragment>,
-    ],
+    render: (_text, record) => [<Fragment>{record.phone ?? ""}</Fragment>],
     copyable: true,
     key: "phone",
     ellipsis: true,
@@ -157,6 +155,7 @@ const CustomerList: FunctionComponent<CustomerListProps> = () => {
             console.log(res);
             return {
               data: res.customers.map((cus) => {
+                console.log(cus);
                 return {
                   ...cus,
                 };
