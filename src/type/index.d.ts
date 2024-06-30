@@ -6,7 +6,7 @@ export type userType = {
   phone: string;
   roles: string;
 };
-export type messageType = {
+export type messagesType = {
   id: number;
   content: string;
 };

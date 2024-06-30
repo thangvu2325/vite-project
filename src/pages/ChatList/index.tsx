@@ -4,8 +4,10 @@ import { loginSuccess } from "@/redux/slices/authSlice";
 import { createAxios, tokenType } from "@/services/createInstance";
 import { Divider } from "antd";
 import Title from "antd/es/typography/Title";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext, useEffect } from "react";
 import CollapseTable from "./components/CollapseTable";
+import { DefaultLayoutContext } from "@/layouts/DefaultLayout";
+import { routes } from "@/routes";
 
 interface ChatListPageProps {}
 
@@ -17,10 +19,20 @@ const ChatListPage: FunctionComponent<ChatListPageProps> = () => {
     dispatch,
     loginSuccess
   );
+  const { setBreadcrumbst } = useContext(DefaultLayoutContext);
+  useEffect(() => {
+    setBreadcrumbst([
+      {
+        content: "Danh sách hội thoại",
+        href: routes.chatList,
+      },
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="flex flex-col">
       <div className="flex justify-between pt-6 px-12 pb-4">
-        <Title level={1}>Chat</Title>
+        <Title level={1}>Hội Thoại</Title>
       </div>
       <Divider style={{ margin: 0 }}></Divider>
       <div className="px-12 pt-2 flex flex-col gap-4 pb-10">

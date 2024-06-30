@@ -5,10 +5,18 @@ import { loginSuccess } from "@/redux/slices/authSlice";
 import { createAxios, tokenType } from "@/services/createInstance";
 import { deviceType, historyLoggerType } from "@/type/device";
 import { App } from "antd";
-import { FunctionComponent, useCallback, useEffect, useState } from "react";
+import {
+  FunctionComponent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useParams } from "react-router";
 import Collapse from "./components/Collapse";
 import useMessage from "@/hooks/useMessage";
+import { DefaultLayoutContext } from "@/layouts/DefaultLayout";
+import { routes } from "@/routes";
 
 interface DevicePageProps {}
 
@@ -45,7 +53,6 @@ const DevicePage: FunctionComponent<DevicePageProps> = () => {
         const deviceData = resDevice.data;
         setLoggerData(historyData);
         joinRoom(deviceData.roomHistoryLoggerId);
-        console.log(1);
         messageReiceved(handleMessageReceived);
       } catch (error: any) {
         message.error(error.response.data.message);
@@ -58,7 +65,20 @@ const DevicePage: FunctionComponent<DevicePageProps> = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  const { setBreadcrumbst } = useContext(DefaultLayoutContext);
+  useEffect(() => {
+    setBreadcrumbst([
+      {
+        content: "Danh sách thiết bị",
+        href: routes.deviceList,
+      },
+      {
+        content: `Thiết bị ${deviceId}`,
+        href: routes.deviceList,
+      },
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="my-4 py-4 mx-4 px-4 flex flex-col gap-4">
       <div className="text-xl font-bold">Mã thiết bị: {deviceId}</div>

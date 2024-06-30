@@ -3,6 +3,7 @@ import { userData } from "@/redux/selector";
 import { loginSuccess } from "@/redux/slices/authSlice";
 import { createAxios, tokenType } from "@/services/createInstance";
 import { historyType } from "@/type/device";
+import { App } from "antd";
 import { FunctionComponent, useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 
@@ -15,7 +16,7 @@ const LineChart: FunctionComponent<LineChartProps> = ({ deviceId }) => {
   const userToken = useAppSelector(userData)?.currentUser as tokenType;
   const dispatch = useAppDispatch();
   const axiosClient = createAxios(userToken, dispatch, loginSuccess);
-
+  const { message } = App.useApp();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -23,7 +24,7 @@ const LineChart: FunctionComponent<LineChartProps> = ({ deviceId }) => {
         setData(res.data.historyList);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        console.log(error.message);
+        message.error(error.response.data.message);
       }
     };
     fetchData();

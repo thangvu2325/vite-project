@@ -1,5 +1,7 @@
-import { Button, theme, Modal, QRCode } from "antd";
-import { FunctionComponent, ReactNode } from "react";
+import { theme, Modal } from "antd";
+import { FunctionComponent, ReactNode, useRef } from "react";
+import DeviceQrExportPdf from "./DeviceQrExportPdf";
+import ReactToPrint from "react-to-print";
 
 const { useToken } = theme;
 
@@ -13,20 +15,6 @@ interface DeviceListLayoutProps {
     type: "owner" | "user";
   }>;
 }
-// const downloadQRCode = () => {
-//   const canvas = document
-//     .getElementById("myqrcode")
-//     ?.querySelector<HTMLDivElement>("canvas");
-//   if (canvas) {
-//     const url = can;
-//     const a = document.createElement("a");
-//     a.download = "QRCode.png";
-//     a.href = url;
-//     document.body.appendChild(a);
-//     a.click();
-//     document.body.removeChild(a);
-//   }
-// };
 
 const DeviceListLayout: FunctionComponent<DeviceListLayoutProps> = ({
   children,
@@ -42,49 +30,47 @@ const DeviceListLayout: FunctionComponent<DeviceListLayoutProps> = ({
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const componentRef = useRef<any>(null);
+  const handlePrint = () => {
+    if (componentRef.current) {
+      // Trigger the print action
+      componentRef.current.onPrint();
+    }
+  };
+  console.log(deviceQRCode);
   return (
     <div className="w-full py-4 px-12">
       <div className="p-4" style={{ color: token.colorText }}>
         {children}
         <Modal
           title={
-            <h3 className="text-xl font-bold italic">
-              QR Code tạo thành công!
-            </h3>
+            <div className="flex justify-between items-center mr-4">
+              <h3 className="text-xl font-bold italic">
+                QR Code tạo thành công!
+              </h3>
+              <ReactToPrint
+                trigger={() => (
+                  <button
+                    onClick={handlePrint}
+                    className="w-24 h-10 text-white font-semibold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg shadow-lg hover:scale-105 duration-200 hover:drop-shadow-2xl hover:shadow-[#7dd3fc] hover:cursor-pointer"
+                  >
+                    Print
+                  </button>
+                )}
+                content={() => componentRef.current}
+              />
+            </div>
           }
-          width={600}
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
+          width={"auto"}
         >
-          <div className="flex justify-center items-center gap-4 w-[560px] max-w-[560px] flex-wrap mt-8">
-            {deviceQRCode.length
-              ? deviceQRCode.map((device) => (
-                  <div
-                    key={device.deviceId}
-                    className="flex flex-col justify-center items-center mb-6"
-                    id="myqrcode"
-                  >
-                    <div
-                      className="flex flex-col items-center gap-4 p-4"
-                      id="downloadQR"
-                    >
-                      <h3 className="text-lg font-bold">
-                        Mã Thiết Bị: {device.deviceId}
-                      </h3>
-                      <QRCode
-                        value={JSON.stringify(device)}
-                        bgColor="#fff"
-                        style={{ marginBottom: 16 }}
-                      />
-                    </div>
-                    <Button type="primary" onClick={() => {}}>
-                      Tải Mã QR Code
-                    </Button>
-                  </div>
-                ))
-              : ""}
-          </div>
+          <DeviceQrExportPdf
+            ref={componentRef}
+            formData={deviceQRCode}
+          ></DeviceQrExportPdf>
         </Modal>
       </div>
     </div>

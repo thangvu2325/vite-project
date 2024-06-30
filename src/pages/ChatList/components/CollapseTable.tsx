@@ -12,7 +12,7 @@ import {
 } from "@ant-design/pro-components";
 import { Collapse, IconButton } from "@material-tailwind/react";
 import { IconCaretRightFilled, IconDots } from "@tabler/icons-react";
-import { Button, Divider, Rate, Tag as TagAntd } from "antd";
+import { Divider, Rate, Tag as TagAntd } from "antd";
 import { AxiosInstance } from "axios";
 import { FunctionComponent, useRef, useState } from "react";
 import { NavigateFunction, useLocation, useNavigate } from "react-router";
@@ -234,23 +234,11 @@ const CollapseTable: FunctionComponent<CollapseTableProps> = ({
                   alert(value);
                 },
               },
-
               filter: (
                 <LightFilter>
                   <ProFormDatePicker name="startdate" label="Ngày bắt đầu" />
                 </LightFilter>
               ),
-              actions: [
-                <Button
-                  key="primary"
-                  type="primary"
-                  onClick={() => {
-                    alert("add");
-                  }}
-                >
-                  Thêm
-                </Button>,
-              ],
             }}
             actionRef={actionRef}
             search={false}

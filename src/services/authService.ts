@@ -41,6 +41,7 @@ const checkEmailValid = async (email: string) => {
     return res.data;
   } catch (error: any) {
     console.log(error.message);
+    throw error;
   }
 };
 const checkSecretKey = async (secretKey: string) => {
@@ -54,6 +55,7 @@ const checkSecretKey = async (secretKey: string) => {
     return res.data;
   } catch (error: any) {
     console.log(error.message);
+    throw error;
   }
 };
 const checkPhoneValid = async (phone: string) => {
@@ -64,6 +66,7 @@ const checkPhoneValid = async (phone: string) => {
     return res.data;
   } catch (error: any) {
     console.log(error.message);
+    throw error;
   }
 };
 const login = async (

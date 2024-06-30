@@ -1,8 +1,10 @@
 import { AxiosInstance } from "axios";
 
-const getAllDevices = async (axiosClient: AxiosInstance) => {
+const getAllDevices = async (axiosClient: AxiosInstance, deviceId?: string) => {
   try {
-    const res = await axiosClient.get("/devices");
+    const res = await axiosClient.get(
+      `/devices${deviceId ? `?deviceId=${deviceId}` : ""}`
+    );
     return res.data;
   } catch (error) {
     console.log(error);

@@ -1,4 +1,11 @@
-import { FunctionComponent, useRef, useState } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+  FunctionComponent,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import {
   ModalForm,
@@ -13,18 +20,16 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/selector";
 import { createAxios, tokenType } from "@/services/createInstance";
 import { loginSuccess } from "@/redux/slices/authSlice";
-import { Button, Divider, Dropdown, Space, Table, Tag, message } from "antd";
+import { Button, Divider, Space, Table, Tag, message } from "antd";
 import Title from "antd/es/typography/Title";
 import { waitTime } from "@/constants";
-import {
-  EllipsisOutlined,
-  PlusOutlined,
-  ArrowRightOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import devicesService from "@/services/deviceService";
 import { AxiosInstance } from "axios";
 import LineChart from "../components/LineChart";
 import { NavigateFunction, useNavigate } from "react-router";
+import { DefaultLayoutContext } from "@/layouts/DefaultLayout";
+import { routes } from "@/routes";
 interface DeviceListProps {}
 const columns: ({
   showModal,
@@ -77,27 +82,10 @@ const columns: ({
       },
     },
     {
-      title: "Room",
-      dataIndex: "roomId",
-      copyable: true,
-      ellipsis: true,
-      tooltip: "Tiêu đề quá dài sẽ tự động co lại",
-    },
-    {
       title: "Lựa chọn",
       valueType: "option",
       key: "option",
-      render: (_text, record, _, action) => [
-        <Tag
-          color={"purple"}
-          style={{ cursor: "pointer", marginRight: "0" }}
-          key="editable"
-          onClick={() => {
-            action?.startEditable?.(record.id);
-          }}
-        >
-          Edit
-        </Tag>,
+      render: (_text, record, _, _action) => [
         <ModalForm
           style={{
             marginTop: "0",
@@ -328,8 +316,6 @@ const columns: ({
             }
           }}
           menus={[
-            { key: "copy", name: "Edit" },
-            { key: "delete", name: "Delete" },
             {
               key: "QRCode",
               name: "QR Code",
@@ -366,7 +352,16 @@ const DeviceList: FunctionComponent<DeviceListProps> = () => {
     setDeviceQRCode([props]);
     setIsModalOpen(true);
   };
-
+  const { setBreadcrumbst } = useContext(DefaultLayoutContext);
+  useEffect(() => {
+    setBreadcrumbst([
+      {
+        content: "Danh sách thiết bị",
+        href: routes.deviceList,
+      },
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <DeviceListLayout
       setIsModalOpen={setIsModalOpen}
@@ -403,7 +398,7 @@ const DeviceList: FunctionComponent<DeviceListProps> = () => {
         }}
         actionRef={actionRef}
         loading={loading}
-        request={async () => {
+        request={async (params) => {
           setLoading(true);
           await waitTime(1000);
           const res: { devices: Array<deviceType> } =
@@ -411,7 +406,13 @@ const DeviceList: FunctionComponent<DeviceListProps> = () => {
           setLoading(false);
           return {
             data: res.devices
-              .filter((device) => device.active)
+              .filter((device) => {
+                return params.ownerId
+                  ? device.ownerId.includes(params.ownerId.trim())
+                  : true && params.deviceId
+                  ? device.deviceId.includes(params.deviceId.trim())
+                  : true && device.active;
+              })
               .map((device) => {
                 const { customer_id, ...props } = device;
                 return {
@@ -467,29 +468,6 @@ const DeviceList: FunctionComponent<DeviceListProps> = () => {
           >
             Thêm
           </Button>,
-          <Dropdown
-            key="menu"
-            menu={{
-              items: [
-                {
-                  label: "1st item",
-                  key: "1",
-                },
-                {
-                  label: "2nd item",
-                  key: "1",
-                },
-                {
-                  label: "3rd item",
-                  key: "1",
-                },
-              ],
-            }}
-          >
-            <Button>
-              <EllipsisOutlined />
-            </Button>
-          </Dropdown>,
         ]}
       />
     </DeviceListLayout>

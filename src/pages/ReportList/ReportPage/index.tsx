@@ -10,9 +10,16 @@ import { ticketType } from "@/type/ticket";
 import { IconArrowBackUp } from "@tabler/icons-react";
 import { App, Tag as TagAntd } from "antd";
 import Title from "antd/es/typography/Title";
-import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FunctionComponent,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useNavigate, useParams } from "react-router";
 import { IconButton, Textarea } from "@material-tailwind/react";
+import { DefaultLayoutContext } from "@/layouts/DefaultLayout";
 
 interface ReportPageProps {}
 
@@ -57,10 +64,20 @@ const ReportPage: FunctionComponent<ReportPageProps> = () => {
       setTicket(data);
       message.success("Cập nhật thành công");
     } catch (error: any) {
-      message.error(error.message);
+      message.error(error.response.data.message);
     }
   };
   const navigate = useNavigate();
+  const { setBreadcrumbst } = useContext(DefaultLayoutContext);
+  useEffect(() => {
+    setBreadcrumbst([
+      {
+        content: "Danh sách báo cáo",
+        href: routes.reportList,
+      },
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="p-4 relative">
       <div className="sticky top-4 left-4">
@@ -150,6 +167,8 @@ const ReportPage: FunctionComponent<ReportPageProps> = () => {
                     // Call the updateTicket function with the new status
                     updateTicket({
                       status,
+                      submiter:
+                        status === "PENDING" ? "" : currentUser?.user.id ?? "",
                     } as ticketType);
                   }}
                 />
@@ -250,6 +269,7 @@ const ReportPage: FunctionComponent<ReportPageProps> = () => {
                 updateTicket({
                   ...ticket,
                   status: "RESOLVED",
+                  submiter: currentUser?.user.id ?? "",
                 } as ticketType);
                 navigate(routes.reportList);
               }}

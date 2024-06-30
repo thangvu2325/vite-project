@@ -1,4 +1,4 @@
-import { roomType } from "@/type/room";
+import { messageType, roomType } from "@/type/room";
 import { AxiosInstance } from "axios";
 
 const getRoomforStatus = async (axiosClient: AxiosInstance, status: string) => {
@@ -15,6 +15,26 @@ const getAllRoomSubmiter = async (axiosClient: AxiosInstance) => {
   const res = await axiosClient.get(`/rooms/submiter`);
   return res.data;
 };
+const getMessageRoom = async (
+  axiosClient: AxiosInstance,
+  roomId: string,
+  skip: number = 0,
+  take: number = 10
+): Promise<Array<messageType>> => {
+  try {
+    const response = await axiosClient.get("/messages", {
+      params: {
+        roomId,
+        skip,
+        take,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+    throw error;
+  }
+};
 const updateRoom = async (
   axiosClient: AxiosInstance,
   ticketId: string,
@@ -29,5 +49,6 @@ const roomService = {
   getRoomforId,
   updateRoom,
   getAllRoomSubmiter,
+  getMessageRoom,
 };
 export default roomService;

@@ -47,22 +47,20 @@ const ChatPage: FunctionComponent<ChatPageProps> = () => {
 
   const handleMessageReceived = useCallback((messageReceived: string) => {
     const parsedData = JSON.parse(messageReceived);
-    if (parsedData.type === "message") {
-      setMessageData((prev) => [...prev, parsedData.message]);
-    } else if (parsedData.type === "isTyping") {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+    if (parsedData.roomId === params.chatId) {
+      if (parsedData.type === "message") {
+        setMessageData((prev) => [...prev, parsedData.message]);
+      } else if (parsedData.type === "isTyping") {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+        setTyping(parsedData.message);
+        timeoutRef.current = setTimeout(() => {
+          setTyping("");
+        }, 1000);
+      } else if (parsedData.type === "handleRoom") {
+        setRoom(JSON.parse(parsedData.message));
       }
-      setTyping(parsedData.message);
-      timeoutRef.current = setTimeout(() => {
-        setTyping("");
-      }, 1000);
-    } else if (parsedData.type === "handleRoom") {
-      setRoom(JSON.parse(parsedData.message));
-      // if (room.status === "RESOLVED") {
-      //   message.success("Khách hàng đã đóng trò chuyện");
-      // } else {
-      // }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -86,7 +84,7 @@ const ChatPage: FunctionComponent<ChatPageProps> = () => {
 
         setRoom(data);
       } catch (error: any) {
-        message.error(error.message || "An error occurred");
+        message.error(error.response.data.message);
       }
     };
     fetchData();
@@ -94,7 +92,6 @@ const ChatPage: FunctionComponent<ChatPageProps> = () => {
   }, []);
   useEffect(() => {
     if (room?.id) {
-      console.log(room);
       if (room.status === "RESOLVED") {
         message.info("Khách hàng đã đóng phòng!");
         navigate(routes.chatList);
@@ -125,10 +122,24 @@ const ChatPage: FunctionComponent<ChatPageProps> = () => {
         setRoom(data);
       message.success("Cập nhật thành công");
     } catch (error: any) {
-      message.error(error.message);
+      message.error(error.response.data.message);
     }
   };
   const navigate = useNavigate();
+  const { setBreadcrumbst } = useContext(DefaultLayoutContext);
+  useEffect(() => {
+    setBreadcrumbst([
+      {
+        content: "Danh sách hội thoại",
+        href: routes.chatList,
+      },
+      {
+        content: "Hội thoại",
+        href: routes.chatPage,
+      },
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="p-4 pt-0 relative">
       <div className="sticky top-4 left-4">
@@ -260,16 +271,19 @@ const ChatPage: FunctionComponent<ChatPageProps> = () => {
                     ))
                   : ""}
               </div>
-              {typing ? (
-                <div className="bg-transparent py-2 px-4 self-center flex items-center justify-center gap-2 select-none cursor-wait break-words text-wrap">
-                  <IconLoader width={24} className="animate-spin"></IconLoader>
-                  Người dùng {typing} đang nhập tin nhắn
-                </div>
-              ) : (
-                ""
-              )}
 
               <div className="px-3 py-2 border-t dark:border-zinc-700">
+                {typing ? (
+                  <div className="bg-transparent py-2 px-4 self-center flex items-center justify-center gap-2 select-none cursor-wait break-words text-wrap">
+                    <IconLoader
+                      width={24}
+                      className="animate-spin"
+                    ></IconLoader>
+                    Người dùng {typing} đang nhập tin nhắn
+                  </div>
+                ) : (
+                  ""
+                )}
                 <div className="flex gap-2">
                   <input
                     placeholder="Type your message..."

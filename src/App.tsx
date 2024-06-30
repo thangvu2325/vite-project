@@ -59,11 +59,15 @@ const App: FC = () => {
                           path={route.path}
                           element={
                             <Suspense
-                              fallback={<LoadingScreen></LoadingScreen>}
+                              fallback={
+                                <LoadingScreen content="Đang tải vui lòng chờ"></LoadingScreen>
+                              }
                             >
                               <Layout>
                                 <Suspense
-                                  fallback={<LoadingScreen></LoadingScreen>}
+                                  fallback={
+                                    <LoadingScreen content="Đang tải vui lòng chờ"></LoadingScreen>
+                                  }
                                 >
                                   <Page />
                                 </Suspense>
@@ -89,7 +93,9 @@ const App: FC = () => {
                           path={route.path}
                           element={
                             <Suspense
-                              fallback={<LoadingScreen></LoadingScreen>}
+                              fallback={
+                                <LoadingScreen content="Đang tải vui lòng chờ"></LoadingScreen>
+                              }
                             >
                               <Layout>
                                 <ProtectedRoute>

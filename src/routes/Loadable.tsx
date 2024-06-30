@@ -7,7 +7,11 @@ interface LoadableProps {
 }
 
 const Loadable: FC<LoadableProps> = ({ children }) => {
-  return <Suspense fallback={<LoadingScreen />}>{children}</Suspense>;
+  return (
+    <Suspense fallback={<LoadingScreen content="Đang tải, vui lòng chờ" />}>
+      {children}
+    </Suspense>
+  );
 };
 
 export default Loadable;

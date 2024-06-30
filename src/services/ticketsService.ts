@@ -25,7 +25,15 @@ const updateTicket = async (
   const res = await axiosClient.put(`/tickets/${ticketId}`, Dto);
   return res.data;
 };
-
-const ticketsService = { getTicketforStatus, getTicketforId, updateTicket };
+const getTicketHandle = async (axiosClient: AxiosInstance) => {
+  const res = await axiosClient.get(`/tickets/select`);
+  return res.data;
+};
+const ticketsService = {
+  getTicketforStatus,
+  getTicketforId,
+  updateTicket,
+  getTicketHandle,
+};
 
 export default ticketsService;

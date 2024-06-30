@@ -1,23 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FunctionComponent, useRef, useState } from "react";
-import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import {
-  ModalForm,
-  ProDescriptions,
-  ProTable,
-  TableDropdown,
-} from "@ant-design/pro-components";
+  FunctionComponent,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import type { ActionType, ProColumns } from "@ant-design/pro-components";
+import { ProTable } from "@ant-design/pro-components";
 import { deviceType } from "@/type/device";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/selector";
 import { createAxios, tokenType } from "@/services/createInstance";
 import { loginSuccess } from "@/redux/slices/authSlice";
-import { Button, Dropdown, Space, Table, Tag, message } from "antd";
-import Title from "antd/es/typography/Title";
+import { Button, Space, Table, message } from "antd";
 import { waitTime } from "@/constants";
-import { EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import DeviceListLayout from "../layout";
 import devicesService from "@/services/deviceService";
+import { DefaultLayoutContext } from "@/layouts/DefaultLayout";
+import { routes } from "@/routes";
 
 interface DeviceListWaitingProps {}
 const columns: ({
@@ -28,12 +30,13 @@ const columns: ({
     deviceId: string;
     type: "owner" | "user";
   }) => void;
-}) => ProColumns<deviceType>[] = ({ showModal }) => {
+}) => ProColumns<deviceType>[] = () => {
   return [
     {
       title: "#",
       dataIndex: "key",
       width: 48,
+      search: false,
     },
     {
       title: "Mã thiết bị",
@@ -53,9 +56,9 @@ const columns: ({
     {
       title: "Mã Bí Mật",
       dataIndex: "secretKey",
-      copyable: true,
       ellipsis: true,
       tooltip: "Tiêu đề quá dài sẽ tự động co lại",
+      search: false,
       formItemProps: {
         rules: [
           {
@@ -64,265 +67,6 @@ const columns: ({
           },
         ],
       },
-    },
-    {
-      title: "Lựa chọn",
-      valueType: "option",
-      key: "option",
-      render: (_text, record, _, action) => [
-        <Tag
-          color={"purple"}
-          style={{ cursor: "pointer", marginRight: "0" }}
-          key="editable"
-          onClick={() => {
-            action?.startEditable?.(record.id);
-          }}
-        >
-          Edit
-        </Tag>,
-        <ModalForm
-          style={{ marginTop: "0", top: "50px" }}
-          title={<Title level={2}>Thông Tin Chi Tiết</Title>}
-          trigger={
-            <Tag color={"green"} style={{ cursor: "pointer" }}>
-              Detail
-            </Tag>
-          }
-          submitter={{
-            searchConfig: {
-              submitText: "Xác Nhận",
-              resetText: "Làm Mới",
-            },
-          }}
-          onFinish={async () => {
-            await waitTime(2000);
-            message.success("Refresh thành công!");
-            return true;
-          }}
-        >
-          <ProDescriptions
-            column={2}
-            title="Thiết Bị"
-            tooltip="Danh sách chi tiết của thiết bị"
-            className="ml-10"
-          >
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="Mã Thiết Bị"
-            >
-              {record?.deviceId}
-            </ProDescriptions.Item>
-            {/* <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="Khói"
-            >
-              {record?.sensors?.smokeValue}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              label="Dung lượng Pin:"
-              tooltip="Dung lượng pin, tối đa là 5000"
-            >
-              {record?.battery?.voltage}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="Nguồn"
-            >
-              {record?.battery?.source.toUpperCase()}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              label="Time Updated"
-              valueType="dateTime"
-              span={2}
-            >
-              {dayjs(record?.updatedAt).valueOf()}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item span={2}>
-              <Divider style={{ margin: "4px 0" }}></Divider>
-            </ProDescriptions.Item>
-            <ProDescriptions.Item span={2} valueType="text" ellipsis>
-              <Title level={3}>Tín Hiệu</Title>
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="Band"
-            >
-              {record?.signal?.band}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="deviceNetworkRssiDbm"
-            >
-              {record?.signal?.deviceNetworkRssiDbm}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={2}
-              valueType="text"
-              ellipsis
-              label="gsmStatus"
-            >
-              {record?.signal?.gsmStatus}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item span={2} valueType="text" ellipsis>
-              <Title level={3}>Network</Title>
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="absoluteRadioFrequencyChannel"
-            >
-              {record.signal?.networkReport.absoluteRadioFrequencyChannel}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="areaTacChangeCount"
-            >
-              {record.signal?.networkReport.areaTacChangeCount}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="cellChangeCount"
-            >
-              {record.signal?.networkReport.cellChangeCount}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="cellId"
-            >
-              {record.signal?.networkReport?.cellId}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="connectionStatus"
-            >
-              {record.signal?.networkReport?.connectionStatus}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="extendedDiscontinuousReception"
-            >
-              {record.signal?.networkReport?.extendedDiscontinuousReception}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="ipAddress"
-            >
-              {record.signal?.networkReport?.ipAddress}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="mcc"
-            >
-              {record.signal?.networkReport?.mcc}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="mnc"
-            >
-              {record.signal?.networkReport?.mnc}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="referenceSignalReceivedPower"
-            >
-              {record.signal?.networkReport?.referenceSignalReceivedPower}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="referenceSignalReceivedQuality"
-            >
-              {record.signal?.networkReport?.referenceSignalReceivedQuality}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="requestedActiveTime"
-            >
-              {record.signal?.networkReport?.requestedActiveTime}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="requestedPeriodicTrackingAreaUpdate"
-            >
-              {
-                record.signal?.networkReport
-                  ?.requestedPeriodicTrackingAreaUpdate
-              }
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="tac"
-            >
-              {record.signal?.networkReport?.tac}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              label="Time Updated"
-              valueType="dateTime"
-              span={2}
-            >
-              {dayjs(record.signal?.networkReport?.updatedAt).valueOf()}
-            </ProDescriptions.Item> */}
-          </ProDescriptions>
-        </ModalForm>,
-
-        <TableDropdown
-          key="actionGroup"
-          onSelect={(key: string) => {
-            switch (key) {
-              case "QRCode":
-                showModal({
-                  deviceId: record.deviceId,
-                  secretKey: record.secretKey,
-                  type: "owner",
-                });
-                break;
-              default:
-            }
-          }}
-          menus={[
-            {
-              key: "QRCode",
-              name: "QR Code",
-            },
-          ]}
-        />,
-      ],
     },
   ];
 };
@@ -346,7 +90,7 @@ const DeviceListWaiting: FunctionComponent<DeviceListWaitingProps> = () => {
       await devicesService.createDevice(axiosClient);
       message.success("Thèm thiết bị thành công!");
     } catch (error: any) {
-      message.error(error.message);
+      message.error(error.response.data.message);
     }
   };
   const showModal = (pros: {
@@ -357,7 +101,16 @@ const DeviceListWaiting: FunctionComponent<DeviceListWaitingProps> = () => {
     setDeviceQRCode([pros]);
     setIsModalOpen(true);
   };
-
+  const { setBreadcrumbst } = useContext(DefaultLayoutContext);
+  useEffect(() => {
+    setBreadcrumbst([
+      {
+        content: "Danh sách thiết bị đang chờ",
+        href: routes.deviceListWaiting,
+      },
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <DeviceListLayout
       setIsModalOpen={setIsModalOpen}
@@ -372,10 +125,13 @@ const DeviceListWaiting: FunctionComponent<DeviceListWaitingProps> = () => {
         }}
         actionRef={actionRef}
         loading={loading}
-        request={async () => {
+        request={async (params) => {
           setLoading(true);
           const res: { devices: Array<deviceType> } =
-            await devicesService.getAllDevices(axiosClient);
+            await devicesService.getAllDevices(
+              axiosClient,
+              params.deviceId ?? ""
+            );
           await waitTime(2000);
           setLoading(false);
           return {
@@ -481,29 +237,6 @@ const DeviceListWaiting: FunctionComponent<DeviceListWaitingProps> = () => {
           >
             Thêm
           </Button>,
-          <Dropdown
-            key="menu"
-            menu={{
-              items: [
-                {
-                  label: "1st item",
-                  key: "1st item",
-                },
-                {
-                  label: "2nd item",
-                  key: "2nd item",
-                },
-                {
-                  label: "3rd item",
-                  key: "3rd item",
-                },
-              ],
-            }}
-          >
-            <Button>
-              <EllipsisOutlined />
-            </Button>
-          </Dropdown>,
         ]}
       />
     </DeviceListLayout>

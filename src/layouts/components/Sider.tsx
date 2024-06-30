@@ -4,8 +4,6 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconHome2,
-  IconSettings,
-  IconUserCircle,
 } from "@tabler/icons-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { MenuProps } from "antd";
@@ -56,20 +54,6 @@ const Sider: FunctionComponent<SiderProps> = ({
       <IconHome2></IconHome2>
     ),
     getItem(
-      <Link to={routes.settings} className="whitespace-nowrap">
-        Cài Đặt
-      </Link>,
-      routes.settings,
-      <IconSettings></IconSettings>
-    ),
-    getItem(
-      <Link to={routes.profile} className="whitespace-nowrap">
-        Hồ Sơ
-      </Link>,
-      routes.profile,
-      <IconUserCircle></IconUserCircle>
-    ),
-    getItem(
       <span className="whitespace-nowrap font-semibold uppercase text-[12px] text-[#9da4ae] -ml-3">
         Concepts
       </span>,
@@ -117,6 +101,15 @@ const Sider: FunctionComponent<SiderProps> = ({
           Quản Lý Chat
         </Link>,
         routes.chatList,
+        <Fragment></Fragment>
+      ),
+    ]),
+    getItem("Quản Lý Nhân Viên", "Staff Manager", <Fragment></Fragment>, [
+      getItem(
+        <Link to={routes.reportList} className="whitespace-nowrap">
+          Danh sách mã bí mật
+        </Link>,
+        routes.reportList,
         <Fragment></Fragment>
       ),
     ]),

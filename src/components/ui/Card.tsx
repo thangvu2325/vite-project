@@ -15,8 +15,8 @@ const Card: FunctionComponent<CardProps> = ({
 }) => {
   return (
     <div
-      className={`relative flex flex-col text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-72 ${
-        className ?? ""
+      className={`relative flex flex-col text-gray-700 bg-white shadow-md bg-clip-border rounded-xl ${
+        className ?? "w-72"
       }`}
     >
       <div className="p-4">
