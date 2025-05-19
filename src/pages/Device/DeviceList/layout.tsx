@@ -30,6 +30,7 @@ const DeviceListLayout: FunctionComponent<DeviceListLayoutProps> = ({
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  console.log(deviceQRCode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const componentRef = useRef<any>(null);
   const handlePrint = () => {
@@ -38,7 +39,6 @@ const DeviceListLayout: FunctionComponent<DeviceListLayoutProps> = ({
       componentRef.current.onPrint();
     }
   };
-  console.log(deviceQRCode);
   return (
     <div className="w-full py-4 px-12">
       <div className="p-4" style={{ color: token.colorText }}>

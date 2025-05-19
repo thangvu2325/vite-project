@@ -88,31 +88,31 @@ const Sider: FunctionComponent<SiderProps> = ({
         <Fragment></Fragment>
       ),
     ]),
-    getItem("Trung tâm hỗ trợ", "Support Center", <Fragment></Fragment>, [
-      getItem(
-        <Link to={routes.reportList} className="whitespace-nowrap">
-          Quản Lý Yêu Cầu
-        </Link>,
-        routes.reportList,
-        <Fragment></Fragment>
-      ),
-      getItem(
-        <Link to={routes.chatList} className="whitespace-nowrap">
-          Quản Lý Chat
-        </Link>,
-        routes.chatList,
-        <Fragment></Fragment>
-      ),
-    ]),
-    getItem("Quản Lý Nhân Viên", "Staff Manager", <Fragment></Fragment>, [
-      getItem(
-        <Link to={routes.reportList} className="whitespace-nowrap">
-          Danh sách mã bí mật
-        </Link>,
-        routes.reportList,
-        <Fragment></Fragment>
-      ),
-    ]),
+    // getItem("Trung tâm hỗ trợ", "Support Center", <Fragment></Fragment>, [
+    //   getItem(
+    //     <Link to={routes.reportList} className="whitespace-nowrap">
+    //       Quản Lý Yêu Cầu
+    //     </Link>,
+    //     routes.reportList,
+    //     <Fragment></Fragment>
+    //   ),
+    //   getItem(
+    //     <Link to={routes.chatList} className="whitespace-nowrap">
+    //       Quản Lý Chat
+    //     </Link>,
+    //     routes.chatList,
+    //     <Fragment></Fragment>
+    //   ),
+    // ]),
+    // getItem("Quản Lý Nhân Viên", "Staff Manager", <Fragment></Fragment>, [
+    //   getItem(
+    //     <Link to={routes.reportList} className="whitespace-nowrap">
+    //       Danh sách mã bí mật
+    //     </Link>,
+    //     routes.reportList,
+    //     <Fragment></Fragment>
+    //   ),
+    // ]),
   ];
   const currentUser = useAppSelector(userData).currentUser;
   const dispatch = useAppDispatch();
