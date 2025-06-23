@@ -26,7 +26,6 @@ import { waitTime } from "@/constants";
 import { PlusOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import devicesService from "@/services/deviceService";
 import { AxiosInstance } from "axios";
-import LineChart from "../components/LineChart";
 import { NavigateFunction, useNavigate } from "react-router";
 import { DefaultLayoutContext } from "@/layouts/DefaultLayout";
 import { routes } from "@/routes";
