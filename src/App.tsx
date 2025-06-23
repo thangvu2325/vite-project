@@ -1,4 +1,4 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider";
 import { FC, Fragment, FunctionComponent, Suspense, lazy } from "react";
 import { persistor, store } from "./redux/store";
@@ -27,7 +27,7 @@ const App: FC = () => {
                 fontSizeHeading5: 10,
                 colorBgBase: "white",
                 colorPrimary: "#1677ff",
-                colorText: "black",
+                colorBgContainer: "white",
               },
               components: {
                 Layout: {
@@ -36,11 +36,22 @@ const App: FC = () => {
                 Divider: {
                   textPaddingInline: 0,
                 },
+                Table: {
+                  colorBgContainer: "white",
+                  headerBg: "white",
+                  rowHoverBg: "white",
+                  borderColor: "white",
+                  bodySortBg: "red",
+                },
+                Modal: {
+                  contentBg: "white",
+                  headerBg: "white",
+                },
               },
             }}
           >
             <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-              <Router>
+              <BrowserRouter>
                 <div className="App">
                   <Routes>
                     {publicRoutes.map((route, index) => {
@@ -109,7 +120,7 @@ const App: FC = () => {
                     })}
                   </Routes>
                 </div>
-              </Router>
+              </BrowserRouter>
             </ThemeProvider>
           </ConfigProvider>
         </GlobalStyle>

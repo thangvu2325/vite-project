@@ -23,7 +23,7 @@
     "@tabler/icons-react": "^2.47.0",
     "@tippyjs/react": "^4.2.6",
     "@vitejs/plugin-react": "^4.2.1",
-    "antd": "^5.13.3",
+    "antd": "^5.25.4",
     "apexcharts": "^3.49.1",
     "axios": "^1.6.7",
     "clsx": "^2.1.0",

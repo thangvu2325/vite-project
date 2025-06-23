@@ -126,22 +126,7 @@ const columns: ({
             >
               {record.deviceId}
             </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="Khói trăắng"
-            >
-              {record.sensors?.whiteSmokeVal}
-            </ProDescriptions.Item>
-            <ProDescriptions.Item
-              span={1}
-              valueType="text"
-              ellipsis
-              label="Khói Đen"
-            >
-              {record.sensors?.blackSmokeVal}
-            </ProDescriptions.Item>
+           
             <ProDescriptions.Item
               label="Dung lượng Pin:"
               tooltip="Dung lượng pin, tối đa là 5000"
@@ -292,7 +277,7 @@ const columns: ({
             </ProDescriptions.Item>
 
             <ProDescriptions.Item span={2} valueType="slider" ellipsis>
-              <LineChart deviceId={record.deviceId}></LineChart>
+              {/* <LineChart deviceId={record.deviceId}></LineChart> */}
             </ProDescriptions.Item>
           </ProDescriptions>
         </ModalForm>,
